@@ -12,7 +12,7 @@
         />
       </q-toolbar>
       <div class="q-px-lg q-pt-xl q-mb-md">
-        <div class="text-h3">Historia Clínica</div>
+        <div class="text-h3">{{$store.state.title}}</div>
         <!-- <div class="text-subtitle1">CentralVet Pigüé</div> -->
         <div class="text-subtitle1">{{todaysDate}}</div>
       </div>
@@ -60,7 +60,7 @@
         </q-scroll-area>
 
         <q-img class="absolute-top" src="~assets/perrosygatos.jpg" style="height: 138px;">
-          <div class="absolute-bottom bg-primary">
+          <div class="absolute-bottom bg-dark">
             <q-avatar size="56px" class="q-mb-sm">
               <img src="~/assets/logo-central-vet.jpg">
             </q-avatar>

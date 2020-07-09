@@ -2,8 +2,8 @@
   <q-page class="bg-grey-3 column">
     <div class="row q-pa-sm bg-primary">
       <q-input
-        v-model="newItem"
-        @keyup.enter="addItem"
+        v-model="newClient"
+        @keyup.enter="addClient"
         filled
         square
         class="col"
@@ -12,7 +12,7 @@
         dense>
         <template v-slot:append>
           <q-btn
-            @click="addItem"
+            @click="addClient"
             round
             dense
             flat
@@ -25,7 +25,7 @@
       bordered
       class="bg-white">
       <q-item
-        v-for="(item, key) in pacientes"
+        v-for="(item, key) in $store.state.clientes.data"
         :key="key"
         @click="item.done = !item.done"
         :class="{'done bg-blue-1': item.done}"
@@ -38,13 +38,13 @@
             color="primary" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>{{item.title}}</q-item-label>
+          <q-item-label>{{item.name}}</q-item-label>
         </q-item-section>
         <q-item-section
           v-if="item.done"
           side>
           <q-btn
-            @click.stop="deleteItem(key)"
+            @click.stop="deleteClient(item.id)"
             flat
             round
             dense
@@ -54,7 +54,7 @@
       </q-item>
     </q-list>
     <div
-      v-if="!pacientes.length"
+      v-if="!Object.keys($store.state.clientes.data).length"
       class="no-items absolute-center">
     	<q-icon
     	  name="check"
@@ -69,49 +69,39 @@
 
 <script>
 export default {
-  name: 'pacientes',
+  name: 'clientes',
 
   data() {
     return {
-    	newItem: "",
-      pacientes: [
-        {
-          title: "Irma",
-          done: false
-        },
-        {
-          title: "El Choclo",
-          done: true
-        },
-        {
-          title: "Fantagui",
-          done: false
-        }
-      ]
+    	newClient: "",
     }
   },
 
+  mounted() {
+    this.$store.dispatch('clientes/openDBChannel')
+  },
+
   methods: {
-    deleteItem(key) {
+    deleteClient(id) {
       this.$q.dialog({
         title: 'Confirmar',
-        message: 'Borrar?',
+        message: 'Borrar el Cliente '+ this.$store.state.clientes.data[id].name +'?',
         cancel: true,
         persistent: true
       }).onOk(() => {
-    		this.pacientes.splice(key, 1)
+        this.$store.dispatch('clientes/delete', id)
 	      this.$q.notify({
 	        message: 'Borrado!',
 	        color: 'purple'
 	      })
       })
     },
-    addItem() {
-    	this.pacientes.push({
-    		title: this.newItem,
-    		done: false
-    	})
-    	this.newItem = ""
+    addClient() {
+      this.$store.dispatch('clientes/set', {
+        name: this.newClient,
+        done: false
+      })
+    	this.newClient = ""
     }
   }
 }
