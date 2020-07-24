@@ -11,10 +11,20 @@
           @click="leftDrawerOpen = !leftDrawerOpen"
         />
       </q-toolbar>
-      <div class="q-px-lg q-pt-xl q-mb-md">
-        <div class="text-h3">{{$store.state.title}}</div>
-        <!-- <div class="text-subtitle1">CentralVet Pigüé</div> -->
-        <div class="text-subtitle1">{{todaysDate}}</div>
+      <div class="q-px-lg q-mb-md">
+        <!-- title -->
+        <div id="title" class="shadow-text text-h4">{{$store.state.title}}</div>
+        <div v-if="$store.state.subtitleLeft" class="text-subtitle1 q-gutter-sm">
+          <!-- subtitle icon/left -->
+          <q-btn color="accent" push>
+            <div class="row items-center no-wrap">
+              <q-icon left :name="$store.state.iconleft"/>
+              <div class="text-center">{{$store.state.subtitleLeft}}</div>
+              <q-icon v-if="$store.state.iconright" right left :name="$store.state.iconright"/>
+              <div v-if="$store.state.subtitleRight" class="text-right">{{$store.state.subtitleRight}}</div>
+            </div>
+          </q-btn>
+        </div>
       </div>
       <q-img 
         class="header-img absolute-top"
@@ -27,7 +37,11 @@
         :width="200"
         :breakpoint="400"
       >
-        <q-scroll-area style="height: calc(100% - 138px); margin-top: 138px; border-right: 1px solid #ddd">
+        <q-scroll-area style="
+          height: calc(100% - 158px);
+          margin-top: 158px;
+          border-right: 1px solid #ddd
+        ">
           <q-list padding>
             <q-item
               to="/"
@@ -39,7 +53,7 @@
               </q-item-section>
 
               <q-item-section>
-                Pacientes
+                CLIENTES
               </q-item-section>
             </q-item>
 
@@ -53,15 +67,18 @@
               </q-item-section>
 
               <q-item-section>
-                Ayuda
+                AYUDA
               </q-item-section>
             </q-item>
           </q-list>
         </q-scroll-area>
 
-        <q-img class="absolute-top" src="~assets/perrosygatos.jpg" style="height: 138px;">
+        <q-img
+          class="absolute-top"
+          src="~assets/perrosygatos.jpg"
+          style="height: 158px;">
           <div class="absolute-bottom bg-dark">
-            <q-avatar size="56px" class="q-mb-sm">
+            <q-avatar size="76px" class="q-mb-sm">
               <img src="~/assets/logo-central-vet.jpg">
             </q-avatar>
             <div class="text-weight-bold">CentralVet Pigüé</div>
@@ -71,35 +88,40 @@
       </q-drawer>
 
     <q-page-container>
-      <keepalive>
+      <!-- <keepalive> -->
         <router-view />
-      </keepalive>
+      <!-- </keepalive> -->
     </q-page-container>
   </q-layout>
 </template>
 
 <script>
-import { date } from 'quasar'
+  import { date } from 'quasar'
 
-export default {
-  name: 'MainLayout',
+  export default {
+    name: 'MainLayout',
 
-  data () {
-    return {
-      leftDrawerOpen: false
-    }
-  },
-
-  computed: {
-    todaysDate() {
-      let timeStamp = Date.now()
-      return date.formatDate(timeStamp, 'dddd D MMMM')
-    }
+    data () {
+      return {
+        leftDrawerOpen: false,
+        model: '2019/03/15',
+      }
+    },
   }
-}
 </script>
 
-<style type="scss">
+<style lang="scss">
+  .shadow-text{
+    text-shadow: 1px 1px 2px rgba(0,0,0,.5);
+  }
+
+
+  .text-subtitle1, #title {
+    font-family: 'Roboto', sans-serif;
+    margin-top: 7px;
+    text-transform: uppercase
+  }
+
   .header-img{
     height: 100%;
     z-index: -1;
