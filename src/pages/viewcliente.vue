@@ -1,5 +1,21 @@
 <template>
   <q-page class="bg-grey-3 column">
+    <!-- cambios -->
+      <div class="q-px-lg q-pb-md bg-primary">
+        <!-- title -->
+        <div id="title" class="shadow-text text-h5 text-white">{{getClienteName}}</div>
+        <div v-if="getClientePhone" class="text-subtitle1 q-gutter-sm">
+          <!-- subtitle icon/left -->
+          <q-btn color="accent" push>
+            <div class="row items-center no-wrap">
+              <q-icon left name="phone"/>
+              <div class="text-center">{{getClientePhone}}</div>
+              <!-- <q-icon v-if="$store.state.iconright" right left :name="$store.state.iconright"/>
+              <div v-if="$store.state.subtitleRight" class="text-right">{{$store.state.subtitleRight}}</div> -->
+            </div>
+          </q-btn>
+        </div>
+      </div>
     <div class="row q-pa-sm bg-primary z-1">
       <!-- input paciente.name -->
       <q-input v-if="!formFlow.name"
@@ -155,9 +171,22 @@ export default {
     }
   },
 
+  computed: {
+    getClienteName() {
+      return this.$store.state.clientes.data &&
+        this.$store.state.clientes.data[this.$route.params.id]
+        ? this.$store.state.clientes.data[this.$route.params.id].name
+        : "cargando..."
+    },
+    getClientePhone() {
+      return this.$store.state.clientes.data &&
+        this.$store.state.clientes.data[this.$route.params.id]
+        ? this.$store.state.clientes.data[this.$route.params.id].tel
+        : undefined
+    }
+  },
+
   mounted() {
-    this.$store.commit('changeSubtitleRight', '')
-    this.$store.commit('changeIconRight', '')
     this.$store.commit('resetPacientes')
     // sync firestore.pacientes
     const where = [['idCliente', '==', this.$route.params.id]]
@@ -165,12 +194,6 @@ export default {
     this.$store.dispatch('pacientes/openDBChannel', { clauses: {where,orderBy} })
     // get cliente.id
     this.$store.dispatch('clientes/fetchById', this.$route.params.id)
-    .then(() => {
-      // change props header
-      this.$store.commit('changeTitle', this.$store.state.clientes.data[this.$route.params.id].name)
-      this.$store.commit('changeSubtitleLeft', this.$store.state.clientes.data[this.$route.params.id].tel)
-      this.$store.commit('changeIconLeft', 'phone')
-    })
   },
 
   beforeDestroy () {

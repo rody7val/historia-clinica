@@ -133,9 +133,9 @@ export default {
     const orderBy = ['name']
     this.$store.dispatch('clientes/openDBChannel', { clauses: {orderBy} })
     // change props header
-    this.$store.commit('changeTitle', 'Historia Clínica')
-    this.$store.commit('changeSubtitleLeft', this.toDay())
-    this.$store.commit('changeIconLeft', 'la la-calendar')
+    //this.$store.commit('changeTitle', 'Historia Clínica')
+    //this.$store.commit('changeSubtitleLeft', this.toDay())
+    //this.$store.commit('changeIconLeft', 'la la-calendar')
   },
 
   beforeDestroy () {
@@ -144,9 +144,6 @@ export default {
   },
   
   methods: {
-    toDay() {
-      return date.formatDate(Date.now(), 'DD/MM/YYYY')
-    },
     handleDone(id) {
       // switch checkbox store clientes.done
       this.$store.commit('handleDoneClientes', id)

@@ -11,16 +11,15 @@ export default {
   name: 'App',
   created() {
     if (firebase.apps.length === 0) {
-      console.log(firebase.apps.length)
       firebase.initializeApp({
-        apiKey: "AIzaSyADuqq2PHWwS3N3rvaWMmi0RRksAtJUTf4",
-        authDomain: "historia-clinica-cvp.firebaseapp.com",
-        databaseURL: "https://historia-clinica-cvp.firebaseio.com",
-        projectId: "historia-clinica-cvp",
-        storageBucket: "historia-clinica-cvp.appspot.com",
-        messagingSenderId: "112706651486",
-        appId: "1:112706651486:web:e239cc9250df8f36193bcf",
-        measurementId: "G-ED0PFJZCNT"
+        apiKey: "",
+        authDomain: "",
+        databaseURL: "",
+        projectId: "",
+        storageBucket: "",
+        messagingSenderId: "",
+        appId: "",
+        measurementId: ""
       })
     }
   }

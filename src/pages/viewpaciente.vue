@@ -1,5 +1,21 @@
 <template>
   <q-page class="bg-grey-3 column">
+    <!-- cambios -->
+      <div class="q-px-lg q-pb-md bg-primary">
+        <!-- title -->
+        <div id="title" class="shadow-text text-h4 text-white">{{getPacienteName}}</div>
+        <div v-if="getPacienteType" class="text-subtitle1 q-gutter-sm">
+          <!-- subtitle icon/left -->
+          <q-btn color="accent" push>
+            <div class="row items-center no-wrap">
+              <q-icon left :name="getPacienteIconType"/>
+              <div class="text-center">{{getPacienteType}}</div>
+              <q-icon right left :name="getPacienteIconFeme"/>
+              <div class="text-right">{{getPacienteFeme}}</div>
+            </div>
+          </q-btn>
+        </div>
+      </div>
     <div class="row q-pa-sm bg-primary z-1">
       <!-- input entrada.name -->
       <q-input
@@ -121,7 +137,59 @@ export default {
     // close sync
     this.$store.dispatch('entradas/closeDBChannel', { clearModule: true })
   },
-  
+
+  computed: {
+    getPacienteName() {
+      return this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? this.$store.state.pacientes.data[this.$route.params.pid].name
+        : "cargando..."
+    },
+    getPacienteType() {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid].dog === "Perro"
+          ? "Perro" : "Gato"
+        )
+        : undefined
+      )
+    },
+    getPacienteIconType() {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid].dog === "Perro"
+          ? "la la-dog" : "la la-cat"
+        )
+        : undefined
+      )
+    },
+    getPacienteFeme() {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid].feme === "Hembra"
+          ? "Hembra" : "Macho"
+        )
+        : undefined
+      )
+    },
+    getPacienteIconFeme() {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid].feme === "Hembra"
+          ? "la la-venus" : "la la-mars"
+        )
+        : undefined
+      )
+    }
+  },  
 
   mounted() {
     this.$store.commit('resetEntradas')
@@ -129,28 +197,8 @@ export default {
     const where = [['idPaciente', '==', this.$route.params.pid]]
     const orderBy = ['created']
     this.$store.dispatch('entradas/openDBChannel', { clauses: {where,orderBy} })
-    //this.$store.dispatch('clientes/fetchById', this.$route.params.cid)
-    //.then(changeTitle)
-    //const changeTitle = () => {
-      // this.$store.commit('changeTitle', this.$store.state.pacientes.data[this.$route.params.pid].name)
-    //}
-    const changeProps = () => {
-      // title
-      this.$store.commit('changeTitle', this.$store.state.pacientes.data[this.$route.params.pid].name)
-      // icon left
-    	this.$store.commit('changeIconLeft', this.$store.state.pacientes.data[this.$route.params.pid].dog === 'Perro' ? 'la la-dog' : 'la la-cat')
-      // subtitle left
-      this.$store.commit('changeSubtitleLeft', this.$store.state.pacientes.data[this.$route.params.pid].dog)
-      // icon right
-      this.$store.commit('changeIconRight', this.$store.state.pacientes.data[this.$route.params.pid].feme === 'Hembra' ? 'la la-venus' : 'la la-mars')
-      // subtitle right
-      this.$store.commit('changeSubtitleRight', this.$store.state.pacientes.data[this.$route.params.pid].feme)
-      // close spinner
-      // this.$store.commit('toggleLoad')
-    }
-    // get paciente by id and set props
+    // get paciente by id
     this.$store.dispatch('pacientes/fetchById', this.$route.params.pid)
-    .then(changeProps)
   },
 
   methods: {

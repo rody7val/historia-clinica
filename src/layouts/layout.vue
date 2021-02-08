@@ -1,36 +1,33 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="leftDrawerOpen = !leftDrawerOpen"
-        />
-      </q-toolbar>
-      <div class="q-px-lg q-mb-md">
-        <!-- title -->
-        <div id="title" class="shadow-text text-h4">{{$store.state.title}}</div>
-        <div v-if="$store.state.subtitleLeft" class="text-subtitle1 q-gutter-sm">
-          <!-- subtitle icon/left -->
-          <q-btn color="accent" push>
-            <div class="row items-center no-wrap">
-              <q-icon left :name="$store.state.iconleft"/>
-              <div class="text-center">{{$store.state.subtitleLeft}}</div>
-              <q-icon v-if="$store.state.iconright" right left :name="$store.state.iconright"/>
-              <div v-if="$store.state.subtitleRight" class="text-right">{{$store.state.subtitleRight}}</div>
-            </div>
-          </q-btn>
-        </div>
-      </div>
-      <q-img 
-        class="header-img absolute-top"
-        src="~assets/perrosygatos.jpg"/>
-    </q-header>
-
+      <q-header>
+        <!-- menu top -->
+        <q-toolbar>
+          <q-btn
+            flat
+            dense
+            round
+            icon="menu"
+            aria-label="Menu"
+            @click.prevent="leftDrawerOpen = !leftDrawerOpen"
+          />
+          <q-toolbar-title>{{$store.state.title}}</q-toolbar-title>
+          <!-- <q-btn flat round dense icon="sim_card" class="q-mr-xs" />-->
+          <!-- <q-btn flat round dense icon="gamepad" />-->
+          <!-- <q-btn flat round dense icon="assignment_ind">
+            <q-badge floating color="red">2</q-badge>
+          </q-btn>-->
+        </q-toolbar>
+        <!-- menu top -->
+        <!-- <q-toolbar>
+          <q-breadcrumbs active-color="white" style="font-size: 16px">
+            <q-breadcrumbs-el label="Home" icon="home" />
+            <q-breadcrumbs-el label="Components" icon="widgets" />
+            <q-breadcrumbs-el label="Toolbar" />
+          </q-breadcrumbs>
+        </q-toolbar>-->
+      </q-header>
+      <!-- menu left-->
       <q-drawer
         v-model="leftDrawerOpen"
         show-if-above
@@ -51,9 +48,22 @@
               <q-item-section avatar>
                 <q-icon name="list" />
               </q-item-section>
-
               <q-item-section>
                 CLIENTES
+              </q-item-section>
+            </q-item>
+
+            <q-item
+              to="/buscador"
+              exact
+              clickable
+              v-ripple>
+              <q-item-section avatar>
+                <q-icon name="search" />
+              </q-item-section>
+
+              <q-item-section>
+                BUSCADOR
               </q-item-section>
             </q-item>
 
@@ -65,7 +75,6 @@
               <q-item-section avatar>
                 <q-icon name="help" />
               </q-item-section>
-
               <q-item-section>
                 AYUDA
               </q-item-section>
@@ -104,6 +113,8 @@
     data () {
       return {
         leftDrawerOpen: false,
+        dialog: false,
+        maximizedToggle: true,
         model: '2019/03/15',
       }
     },

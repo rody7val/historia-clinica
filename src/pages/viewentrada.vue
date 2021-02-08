@@ -113,10 +113,7 @@ export default {
   beforeDestroy () {
     this.$store.commit('changeSubtitleRight', '')
     this.$store.commit('changeIconRight', '')
-    // close sync
-    this.$store.dispatch('entradas/closeDBChannel', { clearModule: true })
   },
-
 
   mounted() {
     // get entrada.id
@@ -124,22 +121,7 @@ export default {
     .then(() => {
       // get paciente by id and set props
       this.$store.dispatch('pacientes/fetchById', this.$route.params.pid)
-      .then(changeProps)
     })
-    const changeProps = () => {
-      // title
-      this.$store.commit('changeTitle', this.$store.state.pacientes.data[this.$route.params.pid].name)
-      // icon left
-      this.$store.commit('changeIconLeft', this.$store.state.pacientes.data[this.$route.params.pid].dog === 'Perro' ? 'la la-dog' : 'la la-cat')
-      // subtitle left
-      this.$store.commit('changeSubtitleLeft', this.$store.state.pacientes.data[this.$route.params.pid].dog)
-      // icon right
-      this.$store.commit('changeIconRight', this.$store.state.pacientes.data[this.$route.params.pid].feme === 'Hembra' ? 'la la-venus' : 'la la-mars')
-      // subtitle right
-      this.$store.commit('changeSubtitleRight', this.$store.state.pacientes.data[this.$route.params.pid].feme)
-      // close spinner
-      // this.$store.commit('toggleLoad')
-    }
   },
 
   computed: {

@@ -17,6 +17,7 @@ const easyFirestore = VuexEasyFirestore(
 
 const storeData = {
   plugins: [easyFirestore],
+
   state: {
   	title: 'Historia Clínica',
     subtitleLeft: '',
@@ -31,6 +32,25 @@ const storeData = {
       months: 'Enero_Febrero_Marzo_Abril_Mayo_Junio_Julio_Agosto_Septiembre_Octubre_Noviembre_Diciembre'.split('_'),
       monthsShort: 'Ene_Feb_Mar_Abr_May_Jun_Jul_Ago_Sep_Oct_Nov_Dic'.split('_'),
       firstDayOfWeek: 1
+    }
+  },
+
+  getters: {
+    getClientesByName: (state) => (search) => {
+      // let query = new RegExp(search , 'i')
+      // console.log(search)
+      // return state.clientes.filter(cliente => cliente.name === query)
+      return Object.values(state.clientes.data).filter(cliente => {
+        return cliente.name.toLowerCase().includes(search.toLowerCase())
+      })
+    },
+    getPacientesByName: (state) => (search) => {
+      // let query = new RegExp(search , 'i')
+      // console.log(search)
+      // return state.clientes.filter(paciente => paciente.name === query)
+      return Object.values(state.pacientes.data).filter(paciente => {
+        return paciente.name.toLowerCase().includes(search.toLowerCase())
+      })
     }
   },
 
