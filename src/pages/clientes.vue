@@ -1,5 +1,9 @@
 <template>
   <q-page class="bg-grey-3 column">
+      <div class="q-px-lg q-pb-md bg-primary">
+        <!-- title -->
+        <div id="title" class="shadow-text text-h5 text-white">Clientes</div>
+      </div>
     <div class="row q-pa-sm bg-primary">
       <!-- input name -->
       <q-input v-if="!flow.name"
@@ -99,7 +103,7 @@
     <div v-if="!Object.keys($store.state.clientes.data).length"
       class="no-items absolute-center z-0">
     	<q-icon
-    	  name="fa fa-user"
+    	  name="assignment_ind"
     	  size="100px"
     	  color="primary"></q-icon>
     	<div class="text-h5 text-primary text-center">

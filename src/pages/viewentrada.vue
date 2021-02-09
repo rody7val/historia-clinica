@@ -1,5 +1,20 @@
 <template>
-  <div>
+  <q-page class="column">
+      <div class="q-px-lg q-pb-md bg-primary">
+        <!-- title -->
+        <div id="title" class="shadow-text text-h5 text-white">{{getPacienteName}}</div>
+        <div v-if="getPacienteType" class="text-subtitle1 q-gutter-sm">
+          <!-- subtitle icon/left -->
+          <q-btn color="accent" push>
+            <div class="row items-center no-wrap">
+              <q-icon left :name="getPacienteIconType"/>
+              <div class="text-center">{{getPacienteType}}</div>
+              <q-icon right left :name="getPacienteIconFeme"/>
+              <div class="text-right">{{getPacienteFeme}}</div>
+            </div>
+          </q-btn>
+        </div>
+      </div>
     <q-list bordered padding>
       <q-item-label header>Descripción</q-item-label>
       <q-item>
@@ -35,6 +50,7 @@
           </template>
         </q-file>
       </q-item>
+      <q-linear-progress v-if="$store.state.progress" :value="$store.state.progress" class="q-mt-md" />
       <q-separator spaced />
       <q-item-label header>Archivos</q-item-label>
       <!--<q-item-label v-if="Object.keys($store.state.entradas.data[$route.params.eid].files).lenght" caption class="q-px-md">Sin archivos...</q-item-label>-->
@@ -70,19 +86,16 @@
           transition-show="slide-up"
           transition-hide="slide-down">
           <q-card>
-            <q-card-section>
-              <div class="text-h6">{{itemView.name}}</div>
-            </q-card-section>
-
             <q-card-section class="q-pt-none">
               <q-img
               :src="itemView.img"
               class="responsive"
-            >
-              <div class="absolute-bottom text-subtitle1 text-center">
-                {{Number(itemView.size / 1000).toFixed(0)}} KB
-              </div>
-            </q-img>
+              style="height:100%"
+              >
+                <div class="absolute-bottom text-subtitle1 text-center">
+                  {{Number(itemView.size / 1000).toFixed(0)}} KB
+                </div>
+              </q-img>
             </q-card-section>
 
             <q-card-actions align="right">
@@ -90,7 +103,7 @@
             </q-card-actions>
           </q-card>
         </q-dialog>
-  </div>
+  </q-page>
 </template>
 
 <script>
@@ -110,11 +123,6 @@ export default {
     }
   },
 
-  beforeDestroy () {
-    this.$store.commit('changeSubtitleRight', '')
-    this.$store.commit('changeIconRight', '')
-  },
-
   mounted() {
     // get entrada.id
     this.$store.dispatch('entradas/fetchById', this.$route.params.eid)
@@ -131,8 +139,59 @@ export default {
   	fecha() {
   		let created = this.waitParams(this.$store.state.entradas.data, this.$route.params, 'eid', 'created')
   		return this.datear(created)
-  	}
+  	},
+    getPacienteName() {
+      return this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? this.$store.state.pacientes.data[this.$route.params.pid].name
+        : "cargando..."
+    },
+    getPacienteType() {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid].dog === "Perro"
+          ? "Perro" : "Gato"
+        )
+        : undefined
+      )
+    },
+    getPacienteIconType() {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid].dog === "Perro"
+          ? "la la-dog" : "la la-cat"
+        )
+        : undefined
+      )
+    },
+    getPacienteFeme() {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid].feme === "Hembra"
+          ? "Hembra" : "Macho"
+        )
+        : undefined
+      )
+    },
+    getPacienteIconFeme() {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid].feme === "Hembra"
+          ? "la la-venus" : "la la-mars"
+        )
+        : undefined
+      )
+    }
   },
+
   methods: {
     viewImage(item) {
       this.alert = !this.alert
@@ -163,30 +222,29 @@ export default {
       let done = false
       let files = this.$store.state.entradas.data[this.$route.params.eid].files
       // subir imagen
-      storage(this.file, ref, (img) => {
+      storage(this.file, ref, this.$store.commit, (img) => {
         //guardar archivo en entradas[id].files
         files = files.concat({ name, size, type, eid, fileName, ref, img, done })
         this.$store.dispatch('entradas/patch', { id: eid, files })
       })
-
-
-      /*
-      const file = event.target.files[0]
-      const task = firebase.storage().ref(`img/${file.name + Date.now()}`)
-        .put(file)
-      task.on('state_changed', (snapshot) => {
-        let value = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        console.log(snapshot)
-        this.uploadValue = `${value}%`
-      }, (error) => {
-        console.error(error.message)
-      }, () => {
-        task.snapshot.ref.getDownloadURL().then(img => {
-          console.log(img)
-
-        })
-      })*/
-    }
+    },
+    neverNullSingleCondition(prop, returnFalse) {
+      return this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? this.$store.state.pacientes.data[this.$route.params.pid][prop]
+        : returnFalse
+    },
+    neverNullExactCondition(prop, exact, returnTrue, returnFalse) {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid][prop] === exact
+          ? returnTrue : returnFalse
+        )
+        : undefined
+      )
+    },
   }
 
 }

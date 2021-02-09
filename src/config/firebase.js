@@ -22,13 +22,14 @@ function firestore () {
   })
 }
 
-function storage(file, ref, cb) {
+function storage(file, ref, commit, cb) {
   return new Promise((resolve, reject) => {
     let uploadTask = firebase.storage().ref().child(ref).put(file);
     uploadTask.on(
       "state_changed", snapshot => {
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('Upload is ' + progress + '% done')
+        commit("changeProgress", progress)
       }, error => {
         reject(error)
       },() => {

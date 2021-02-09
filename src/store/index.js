@@ -19,6 +19,7 @@ const storeData = {
   plugins: [easyFirestore],
 
   state: {
+    progress: 0,
   	title: 'Historia Clínica',
     subtitleLeft: '',
     subtitleRight: '',
@@ -55,6 +56,9 @@ const storeData = {
   },
 
   mutations: {
+    changeProgress (state, progress) {
+      state.progress = progress / 100
+    },
     changeTitle (state, title) {
       state.title = title
     },

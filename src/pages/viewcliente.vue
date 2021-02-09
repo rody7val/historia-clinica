@@ -1,6 +1,5 @@
 <template>
   <q-page class="bg-grey-3 column">
-    <!-- cambios -->
       <div class="q-px-lg q-pb-md bg-primary">
         <!-- title -->
         <div id="title" class="shadow-text text-h5 text-white">{{getClienteName}}</div>

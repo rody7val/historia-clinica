@@ -1,9 +1,8 @@
 <template>
   <q-page class="bg-grey-3 column">
-    <!-- cambios -->
       <div class="q-px-lg q-pb-md bg-primary">
         <!-- title -->
-        <div id="title" class="shadow-text text-h4 text-white">{{getPacienteName}}</div>
+        <div id="title" class="shadow-text text-h5 text-white">{{getPacienteName}}</div>
         <div v-if="getPacienteType" class="text-subtitle1 q-gutter-sm">
           <!-- subtitle icon/left -->
           <q-btn color="accent" push>
@@ -139,55 +138,20 @@ export default {
   },
 
   computed: {
-    getPacienteName() {
-      return this.$store.state.pacientes.data &&
-        this.$store.state.pacientes.data[this.$route.params.pid]
-        ? this.$store.state.pacientes.data[this.$route.params.pid].name
-        : "cargando..."
+    getPacienteName() {// prop, returnFalse
+      return this.neverNullSingleCondition("name", "cargando...")
     },
-    getPacienteType() {
-      return (
-        this.$store.state.pacientes.data &&
-        this.$store.state.pacientes.data[this.$route.params.pid]
-        ? (
-          this.$store.state.pacientes.data[this.$route.params.pid].dog === "Perro"
-          ? "Perro" : "Gato"
-        )
-        : undefined
-      )
+    getPacienteType() {// prop, exact, returnTrue, returnFalse
+      return this.neverNullExactCondition("dog", "Perro", "Perro", "Gato")
     },
-    getPacienteIconType() {
-      return (
-        this.$store.state.pacientes.data &&
-        this.$store.state.pacientes.data[this.$route.params.pid]
-        ? (
-          this.$store.state.pacientes.data[this.$route.params.pid].dog === "Perro"
-          ? "la la-dog" : "la la-cat"
-        )
-        : undefined
-      )
+    getPacienteIconType() {// prop, exact, returnTrue, returnFalse
+      return this.neverNullExactCondition("dog", "Perro", "la la-dog", "la la-cat")
     },
-    getPacienteFeme() {
-      return (
-        this.$store.state.pacientes.data &&
-        this.$store.state.pacientes.data[this.$route.params.pid]
-        ? (
-          this.$store.state.pacientes.data[this.$route.params.pid].feme === "Hembra"
-          ? "Hembra" : "Macho"
-        )
-        : undefined
-      )
+    getPacienteFeme() {// prop, exact, returnTrue, returnFalse
+      return this.neverNullExactCondition("feme", "Hembra", "Hembra", "Macho")
     },
-    getPacienteIconFeme() {
-      return (
-        this.$store.state.pacientes.data &&
-        this.$store.state.pacientes.data[this.$route.params.pid]
-        ? (
-          this.$store.state.pacientes.data[this.$route.params.pid].feme === "Hembra"
-          ? "la la-venus" : "la la-mars"
-        )
-        : undefined
-      )
+    getPacienteIconFeme() {// prop, exact, returnTrue, returnFalse
+      return this.neverNullExactCondition("feme", "Hembra", "la la-venus", "la la-mars")
     }
   },  
 
@@ -227,12 +191,23 @@ export default {
         dog: '',
       }
     },
-    /*viewEntrada(data, desc) {
-    	this.$q.dialog({
-        title: date.formatDate(data, 'DD/MM/YYYY'),
-        message: desc
-      })
-    },*/
+    neverNullSingleCondition(prop, returnFalse) {
+      return this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? this.$store.state.pacientes.data[this.$route.params.pid][prop]
+        : returnFalse
+    },
+    neverNullExactCondition(prop, exact, returnTrue, returnFalse) {
+      return (
+        this.$store.state.pacientes.data &&
+        this.$store.state.pacientes.data[this.$route.params.pid]
+        ? (
+          this.$store.state.pacientes.data[this.$route.params.pid][prop] === exact
+          ? returnTrue : returnFalse
+        )
+        : undefined
+      )
+    },
     deletePaciente(id) {
       let data = date.formatDate(this.$store.state.entradas.data[id].created, 'DD/MM/YYYY')
       this.$q.dialog({
